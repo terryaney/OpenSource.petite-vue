@@ -3,11 +3,11 @@ import { resolve } from 'path'
 
 export default defineConfig({
   esbuild: {
-    minify: true
+    minify: false
   },
   build: {
     target: 'esnext',
-    minify: 'terser',
+    minify: false,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'PetiteVue',

@@ -8,9 +8,7 @@ export const execute = (scope: any, exp: string, el?: Node) => {
   try {
     return fn(scope, el)
   } catch (e) {
-    if (import.meta.env.DEV) {
-      console.warn(`Error when evaluating expression "${exp}":`)
-    }
+	console.warn(`Error when evaluating expression "${exp}":`)
     console.error(e)
   }
 }
@@ -19,7 +17,8 @@ const toFunction = (exp: string): Function => {
   try {
     return new Function(`$data`, `$el`, `with($data){${exp}}`)
   } catch (e) {
-    console.error(`${(e as Error).message} in expression: ${exp}`)
+	console.warn(`Error when evaluating expression "${exp}":`)
+    console.error(e)
     return () => {}
   }
 }
