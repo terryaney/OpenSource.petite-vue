@@ -17,6 +17,8 @@
   },
   "types": "./dist/types/index.d.ts",
   "scripts": {
+    "use_pnpm": "echo Always use pnpm to run these scripts.",
+    "preinstall": "npx only-allow pnpm",
     "dev": "vite",
     "build": "vite build && tsc --emitDeclarationOnly && move dist/src dist/types",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
