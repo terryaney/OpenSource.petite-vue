@@ -21,7 +21,16 @@ export const bind: Directive<Element & { _class?: string }> = ({
 
   // record static class
   // Update: Was checking if arg==="class", but that was false if bind to { class: }, so just storing no matter what for later use
-  if (el.className) {
+  /*
+	The failing scenario was something like this:
+
+	<div class="static" v-bind="{ class: dynamicClass }"></div>
+
+	Before the change, once dynamicClass was applied, the element could end up with only the dynamic class and lose static. 
+	After the change, the code stores the original class name regardless of arg, so later when class is set it can merge static plus 
+	dynamic instead of overwriting.
+  */
+  if (!el._class && el.className) {
     el._class = el.className
   }
 
