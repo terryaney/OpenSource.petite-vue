@@ -26,7 +26,9 @@
     style: { color: 'blue' },
     obj: {
       class: 'orange'
-    }
+    },
+    btnDisabled: true,
+    counter: 0
   }))
 
   createApp(data).mount()
@@ -41,4 +43,28 @@
     style binding - this should be blue and bold
   </div>
   <div v-bind="obj">object binding - this should be orange</div>
+
+  <!-- v-bind object with class + static class: static must be preserved on updates -->
+  <div class="static" v-bind="{ class: 'orange' }">
+    v-bind object class + static - this should be orange and bold
+  </div>
+
+  <!-- :class array + :disabled: no static class, classes must not duplicate on toggle -->
+  <div>
+    <button
+      type="button"
+      :class="['btn', { disabled: btnDisabled }]"
+      :disabled="btnDisabled"
+    >
+      Toggle (disabled state should not accumulate classes)
+    </button>
+    <button @click="btnDisabled = !btnDisabled">Toggle disabled</button>
+  </div>
+
+  <!-- :class + :disabled with counter to cycle -->
+  <div>
+    <h1 class="static" v-bind="{ class: counter % 2 === 0 ? 'even' : 'odd' }">v-bind (static must stay bold)</h1>
+    <h1 class="static" :class="counter % 2 === 0 ? 'even' : 'odd'">:class (static must stay bold)</h1>
+    <button @click="counter++">Increment counter ({{ counter }})</button>
+  </div>
 </div>
