@@ -19,21 +19,6 @@ export const bind: Directive<Element & { _class?: string }> = ({
 }) => {
   let prevValue: any
 
-  // record static class
-  // Update: Was checking if arg==="class", but that was false if bind to { class: }, so just storing no matter what for later use
-  /*
-	The failing scenario was something like this:
-
-	<div class="static" v-bind="{ class: dynamicClass }"></div>
-
-	Before the change, once dynamicClass was applied, the element could end up with only the dynamic class and lose static. 
-	After the change, the code stores the original class name regardless of arg, so later when class is set it can merge static plus 
-	dynamic instead of overwriting.
-  */
-  if (!el._class && el.className) {
-    el._class = el.className
-  }
-
   effect(() => {
     let value = get()
     if (arg) {
@@ -62,6 +47,11 @@ const setProp = (
   prevValue?: any
 ) => {
   if (key === 'class') {
+    // Snapshot static class before the first dynamic write. Using 'in' instead
+    // of truthiness check so an empty string (no static class) is also valid.
+    if (!('_class' in el)) {
+      el._class = el.className
+    }
     el.setAttribute(
       'class',
       normalizeClass(el._class ? [el._class, value] : value) || ''
